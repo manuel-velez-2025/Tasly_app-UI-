@@ -21,17 +21,16 @@ fun TaskListScreen(
 
     Scaffold(
         topBar = {
-            // 👇 AQUÍ ESTÁ TU "LOGO" 👇
             TopAppBar(
                 title = {
                     Text(
                         text = "Taskly",
-                        color = Color.White, // Letras blancas
+                        color = Color.White,
                         style = MaterialTheme.typography.headlineSmall
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary // Fondo azul/principal
+                    containerColor = MaterialTheme.colorScheme.primary
                 )
             )
         }
