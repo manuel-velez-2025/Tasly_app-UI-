@@ -1,4 +1,4 @@
-package com.manuelvelez.taskly.domain
+package com.manuelvelez.taskly.features.taskly.domain.entities
 
 data class Task(
     val id: String = "",

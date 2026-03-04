@@ -1,4 +1,4 @@
-package com.manuelvelez.taskly.ui.theme
+package com.manuelvelez.taskly.core.ui
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

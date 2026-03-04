@@ -1,5 +1,6 @@
-package com.manuelvelez.taskly.data
+package com.manuelvelez.taskly.core.network
 
+import com.manuelvelez.taskly.features.taskly.data.datasources.remote.api.TaskApi
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
