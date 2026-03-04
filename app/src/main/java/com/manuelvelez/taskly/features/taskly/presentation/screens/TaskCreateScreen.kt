@@ -1,47 +1,83 @@
 package com.manuelvelez.taskly.features.taskly.presentation.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.manuelvelez.taskly.features.taskly.presentation.viewmodels.TasksViewModel
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskCreateScreen(
     viewModel: TasksViewModel,
     onNavigateBack: () -> Unit
 ) {
-    var title by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    var subject by remember { mutableStateOf("") }
-    var date by remember { mutableStateOf("") }
-
+    val state by viewModel.uiState.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.resetForm()
+    }
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Nueva Tarea") }) }
+        topBar = {
+            TopAppBar(
+                title = { Text("Nueva Tarea", color = Color.White) },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Regresar", tint = Color.White)
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary)
+            )
+        }
     ) { padding ->
         Column(
             modifier = Modifier
+                .fillMaxSize()
                 .padding(padding)
                 .padding(16.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            OutlinedTextField(value = title, onValueChange = { title = it }, label = { Text("Título") }, modifier = Modifier.fillMaxWidth())
-            OutlinedTextField(value = description, onValueChange = { description = it }, label = { Text("Descripción") }, modifier = Modifier.fillMaxWidth())
-            OutlinedTextField(value = subject, onValueChange = { subject = it }, label = { Text("Materia") }, modifier = Modifier.fillMaxWidth())
-            OutlinedTextField(value = date, onValueChange = { date = it }, label = { Text("Fecha (YYYY-MM-DD)") }, modifier = Modifier.fillMaxWidth())
-
-            Spacer(modifier = Modifier.weight(1f))
-
+            OutlinedTextField(
+                value = state.formTitle,
+                onValueChange = { viewModel.onTitleChange(it) },
+                label = { Text("Título") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+            OutlinedTextField(
+                value = state.formSubject,
+                onValueChange = { viewModel.onSubjectChange(it) },
+                label = { Text("Materia") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+            OutlinedTextField(
+                value = state.formDate,
+                onValueChange = { viewModel.onDateChange(it) },
+                label = { Text("Fecha") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+            OutlinedTextField(
+                value = state.formDescription,
+                onValueChange = { viewModel.onDescriptionChange(it) },
+                label = { Text("Descripción") },
+                modifier = Modifier.fillMaxWidth(),
+                minLines = 3
+            )
+            Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
-                    viewModel.createTask(title, description, subject, date)
+                    viewModel.saveNewTask()
                     onNavigateBack()
                 },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = title.isNotBlank()
+                enabled = state.formTitle.isNotEmpty() && state.formSubject.isNotEmpty()
             ) {
                 Text("Guardar Tarea")
             }
